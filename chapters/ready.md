@@ -170,6 +170,7 @@ $ git clone git@github.com:greyli/watchlist.git  # 注意更换地址中的用�
 
 ```bash
 $ python -m venv env  # Windows
+Creates virtual Python environments in one or more target directories.
 ```
 
 或：
