@@ -1,8 +1,8 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy  # 导入扩展类
 # from flask_migrate import Migrate
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:Fei!12345678@127.0.0.1:3306/chapter05?charset=utf8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
@@ -56,6 +56,10 @@ def query_fake():
 def page_not_found(e):
     print(e)
     return "404"
+
+@app.route("/index1")
+def index1():
+    return render_template("index1.html")
 
 @app.errorhandler(500)
 def page_not_found(e):
