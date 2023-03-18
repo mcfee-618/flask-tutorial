@@ -1,6 +1,6 @@
 import click
 from flask import Flask, redirect, url_for, request, flash, render_template
-from flask_login import login_required, current_user, login_user, LoginManager, UserMixin
+from flask_login import login_required, current_user, login_user, LoginManager, UserMixin, logout_user
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -9,9 +9,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder="templates")
 login_manager = LoginManager(app) 
+login_manager.login_view= 'login' ## 函数名
 app.debug = True
 
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:Fei!12345678@127.0.0.1:3306/chapter05?charset=utf8'
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/chapter05?charset=utf8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 app.config['SECRET_KEY'] = 'dev' 
 
@@ -35,6 +38,7 @@ class User(db.Model,UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
+    print("hello one")
     user = User.query.get(int(user_id)) 
     return user
 
@@ -84,9 +88,22 @@ def login():
             return render_template('login.html')
         return render_template('login.html')
 
+@login_required
 @app.route("/index")
 def index():
     if current_user.is_authenticated:
         return "index"
     else:
         return redirect(url_for('login'))
+
+ 
+@login_required
+@app.route("/logout")
+def logout():
+    if current_user.is_authenticated:
+        logout_user()
+        flash("logout")
+        return redirect(url_for('login'))
+    else:
+        return redirect(url_for('login'))
+   
